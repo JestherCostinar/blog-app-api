@@ -13,20 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     // POST Mapping - Create
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
     // GET Mapping - Get User Data
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
 
-        return new ResponseEntity(new ApiResponse("User has been successfully deleted!", true), HttpStatus.OK);
+        return new ResponseEntity(new ApiResponse("User has been successfully deleted!", true), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
