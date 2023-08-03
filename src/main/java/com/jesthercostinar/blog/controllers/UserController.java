@@ -4,6 +4,7 @@ import com.jesthercostinar.blog.dto.ApiResponse;
 import com.jesthercostinar.blog.dto.UserDto;
 import com.jesthercostinar.blog.entities.User;
 import com.jesthercostinar.blog.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
 
     // POST Mapping - Create
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid  @RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
