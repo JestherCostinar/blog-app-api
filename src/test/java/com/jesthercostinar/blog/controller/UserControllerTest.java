@@ -45,7 +45,7 @@ public class UserControllerTest {
         user = new UserDto(1,
                 "juan",
                 "juan@gmail.com",
-                "ga2gi8go",
+                "#Ga2gi8go",
                 "to follow...");
 
         admin = new UserDto(2,
@@ -116,5 +116,18 @@ public class UserControllerTest {
         // Assert
         mockMvc.perform(delete("/api/users/{id}", 1))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void test_createUser_WithInvalidData_ReturnsBadRequest() throws Exception {
+        // Arrange
+        user.setName("");
+        when(userService.createUser(any(UserDto.class))).thenReturn(user);
+
+        // Act & Assert
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest());
     }
 }

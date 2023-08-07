@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -43,13 +45,13 @@ public class UserIntegrationTest {
         user = new UserDto(1,
                 "juan",
                 "juan@gmail.com",
-                "ga2gi8go",
+                "#Ga2gi8go",
                 "to follow...");
 
         admin = new UserDto(2,
                 "admin",
                 "admin@gmail.com",
-                "ga2gi8go",
+                "$Ga2gi8go",
                 "to follow...");
     }
 
@@ -118,6 +120,18 @@ public class UserIntegrationTest {
         assertEquals(0, userCount);
     }
 
+//    @Test
+//    void test_createUser_WithInvalidData_ReturnBadRequest() {
+//        // Arrange - set value for the testing
+//        user.setName("");
+//
+//        // Act
+//        ResponseEntity<User> invalidUser = restTemplate.postForEntity(baseUrl, user, User.class);
+//
+//        // Assert
+//        assertEquals(HttpStatus.BAD_REQUEST, invalidUser.getStatusCode());
+//        assertNull(invalidUser.getBody());
+//    }
 
     @AfterEach
     public void afterSetup() {
