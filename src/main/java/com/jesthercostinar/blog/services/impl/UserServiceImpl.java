@@ -6,6 +6,7 @@ import com.jesthercostinar.blog.exceptions.ResourceNotFoundException;
 import com.jesthercostinar.blog.mapper.UserMapper;
 import com.jesthercostinar.blog.repositories.UserRepository;
 import com.jesthercostinar.blog.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,16 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public UserDto createUser(UserDto userdto) {
-        User user = UserMapper.mapToUser(userdto);
+        User user = modelMapper.map(userdto, User.class);
         User savedUser = userRepository.save(user);
 
-        return UserMapper.mapToUserDto(savedUser);
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
@@ -38,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        return UserMapper.mapToUserDto(savedUser);
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
@@ -46,7 +51,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
-        return UserMapper.mapToUserDto(user);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findAll();
 
         return users.stream()
-                .map((user) -> UserMapper.mapToUserDto(user))
+                .map((user) -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
     }
 

@@ -6,6 +6,7 @@ import com.jesthercostinar.blog.exceptions.ResourceNotFoundException;
 import com.jesthercostinar.blog.mapper.CategoryMapper;
 import com.jesthercostinar.blog.repositories.CategoryRepository;
 import com.jesthercostinar.blog.services.CategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        Category saveCategory = categoryRepository.save(CategoryMapper.mapToCategory(categoryDto));
+        Category saveCategory = categoryRepository.save(modelMapper.map(categoryDto, Category.class));
 
-        return CategoryMapper.mapToCategoryDto(saveCategory);
+        return modelMapper.map(saveCategory, CategoryDto.class);
     }
 
     @Override
@@ -34,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category savedCategory = categoryRepository.save(existingCategory);
 
-        return CategoryMapper.mapToCategoryDto(savedCategory);
+        return modelMapper.map(savedCategory, CategoryDto.class);
     }
 
     @Override
@@ -50,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
-        return CategoryMapper.mapToCategoryDto(existingCategory);
+        return modelMapper.map(existingCategory, CategoryDto.class);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()
-                .map(category -> CategoryMapper.mapToCategoryDto(category))
+                .map(category -> modelMapper.map(category, CategoryDto.class))
                 .collect(Collectors.toList());
     }
 }
