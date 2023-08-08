@@ -1,18 +1,21 @@
 package com.jesthercostinar.blog.services.impl;
 
 import com.jesthercostinar.blog.dto.PostDto;
-import com.jesthercostinar.blog.dto.UserDto;
+import com.jesthercostinar.blog.dto.PostResponse;
 import com.jesthercostinar.blog.entities.Category;
 import com.jesthercostinar.blog.entities.Post;
 import com.jesthercostinar.blog.entities.User;
 import com.jesthercostinar.blog.exceptions.ResourceNotFoundException;
-import com.jesthercostinar.blog.mapper.PostMapper;
 import com.jesthercostinar.blog.repositories.CategoryRepository;
 import com.jesthercostinar.blog.repositories.PostRepository;
 import com.jesthercostinar.blog.repositories.UserRepository;
 import com.jesthercostinar.blog.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,12 +73,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost() {
-        List<Post> posts = postRepository.findAll();
+    public PostResponse getAllPost(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = (sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
 
-        return posts.stream()
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Post> pagePosts = postRepository.findAll(pageable);
+
+        List<Post> posts = pagePosts.getContent();
+
+        List<PostDto> postDtos = posts.stream()
                 .map(post -> modelMapper.map(post, PostDto.class))
                 .collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagePosts.getNumber());
+        postResponse.setPageSize(pagePosts.getSize());
+        postResponse.setTotalElements(pagePosts.getNumberOfElements());
+        postResponse.setTotalPages(pagePosts.getTotalPages());
+        postResponse.setLastPage(pagePosts.isLast());
+
+        return postResponse;
     }
 
     @Override

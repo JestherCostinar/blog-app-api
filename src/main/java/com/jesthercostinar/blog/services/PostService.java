@@ -1,7 +1,7 @@
 package com.jesthercostinar.blog.services;
 
 import com.jesthercostinar.blog.dto.PostDto;
-import com.jesthercostinar.blog.entities.Post;
+import com.jesthercostinar.blog.dto.PostResponse;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface PostService {
     void deletePost(int id);
 
     // Get all Posts
-    List<PostDto> getAllPost();
+    PostResponse getAllPost(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     // Get Post by ID
     PostDto getPostById(int id);

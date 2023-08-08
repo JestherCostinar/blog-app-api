@@ -2,8 +2,10 @@ package com.jesthercostinar.blog.controllers;
 
 import com.jesthercostinar.blog.dto.ApiResponse;
 import com.jesthercostinar.blog.dto.PostDto;
+import com.jesthercostinar.blog.dto.PostResponse;
 import com.jesthercostinar.blog.entities.Post;
 import com.jesthercostinar.blog.services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,27 +47,41 @@ public class PostController {
 
     // Get All Post
     @GetMapping("posts")
-    public ResponseEntity<List<PostDto>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPost());
+    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+                                                    @RequestParam(value = "pageSize", defaultValue = "2", required = false) int pageSize,
+                                                    @RequestParam(value = "sortBy", defaultValue = "id", required = false)String sortBy,
+                                                    @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
+
+        return ResponseEntity.ok(postService.getAllPost(pageNumber, pageSize, sortBy, sortDir));
     }
 
-    @GetMapping("posts/{postId}")
+    // Get Post by ID
+    @GetMapping("post/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable int postId) {
         return ResponseEntity.ok(postService.getPostById(postId));
     }
 
     // Delete Post REST API
-    @DeleteMapping("posts/{id}")
+    @DeleteMapping("post/{id}")
     public ApiResponse deletePost(@PathVariable int id) {
         postService.deletePost(id);
 
         return new ApiResponse("Post is successfully delete", true);
     }
 
-    @PutMapping("posts/{id}")
+    // Update Post REST API
+    @PutMapping("post/{id}")
     private ResponseEntity<PostDto> updatePost(@PathVariable int id,
                                                @RequestBody PostDto postDto) {
         return ResponseEntity.ok(postService.updatePost(postDto, id));
     }
+
+    /*
+    Pagination
+    URL:
+
+     */
+
+
 
 }
