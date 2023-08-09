@@ -1,5 +1,6 @@
 package com.jesthercostinar.blog.controllers;
 
+import com.jesthercostinar.blog.config.AppConstants;
 import com.jesthercostinar.blog.dto.ApiResponse;
 import com.jesthercostinar.blog.dto.PostDto;
 import com.jesthercostinar.blog.dto.PostResponse;
@@ -47,10 +48,10 @@ public class PostController {
 
     // Get All Post
     @GetMapping("posts")
-    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-                                                    @RequestParam(value = "pageSize", defaultValue = "2", required = false) int pageSize,
-                                                    @RequestParam(value = "sortBy", defaultValue = "id", required = false)String sortBy,
-                                                    @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) {
+    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) int pageNumber,
+                                                    @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) int pageSize,
+                                                    @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false)String sortBy,
+                                                    @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
 
         return ResponseEntity.ok(postService.getAllPost(pageNumber, pageSize, sortBy, sortDir));
     }
@@ -71,17 +72,16 @@ public class PostController {
 
     // Update Post REST API
     @PutMapping("post/{id}")
-    private ResponseEntity<PostDto> updatePost(@PathVariable int id,
+    public ResponseEntity<PostDto> updatePost(@PathVariable int id,
                                                @RequestBody PostDto postDto) {
         return ResponseEntity.ok(postService.updatePost(postDto, id));
     }
 
-    /*
-    Pagination
-    URL:
-
-     */
-
+    /* Search REST API */
+    @GetMapping("posts/search/{keyword}")
+    public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable String keyword) {
+        return ResponseEntity.ok(postService.searchPosts(keyword));
+    }
 
 
 }
