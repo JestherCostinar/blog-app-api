@@ -37,9 +37,18 @@ public class PostController {
 
     // CREATE
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto,
+    public ResponseEntity<PostDto> createPost(@RequestParam("title") String title,
+                                              @RequestParam("content") String content,
+                                              @RequestParam("image") MultipartFile image,
                                               @PathVariable int userId,
-                                              @PathVariable int categoryId) {
+                                              @PathVariable int categoryId) throws IOException {
+        String fileName = fileService.uploadImage(path, image);
+
+        PostDto postDto = new PostDto();
+        postDto.setTitle(title);
+        postDto.setContent(content);
+        postDto.setImageName(fileName);
+
         PostDto savedPost = postService.createPost(postDto, userId, categoryId);
         return new ResponseEntity<PostDto>(savedPost, HttpStatus.CREATED);
     }
