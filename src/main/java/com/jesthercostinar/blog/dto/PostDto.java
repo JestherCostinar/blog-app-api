@@ -1,6 +1,7 @@
 package com.jesthercostinar.blog.dto;
 
 import com.jesthercostinar.blog.entities.Category;
+import com.jesthercostinar.blog.entities.Comment;
 import com.jesthercostinar.blog.entities.User;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +27,5 @@ public class PostDto {
     private LocalDateTime lastUpdated;
     private CategoryDto category;
     private UserDto user;
+    private Set<CommentDto> comment = new HashSet<>();
 }
